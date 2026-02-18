@@ -1,4 +1,5 @@
 <p align="center">
+	<img src="image.jpg" alt="Astrolabe" />
 	<h1 align="center"><b>Astrolabe</b></h1>
 	<p align="center">
     SaaS starter kit built as a Turborepo monorepo.
