@@ -1,24 +1,15 @@
 <p align="center">
-	<img src="image.jpg" alt="Astrolabe" />
 	<h1 align="center"><b>Astrolabe</b></h1>
 	<p align="center">
-    <a href="https://curino.co"><strong>Website</strong></a> ·
-    <a href="https://github.com/yusa-n/astrolabe/issues"><strong>Issues</strong></a> ·
-    <a href="#whats-included"><strong>What's included</strong></a> ·
-    <a href="#prerequisites"><strong>Prerequisites</strong></a> ·
-    <a href="#getting-started"><strong>Getting Started</strong></a> ·
-    <a href="#how-to-use"><strong>How to use</strong></a>
+    SaaS starter kit built as a Turborepo monorepo.
   </p>
 </p>
-
-Everything you need to build a production-ready SaaS. An opinionated stack based on learnings from building Midday using the latest Next.js framework. It's a monorepo with a focus on code reuse, edge computing, and best practices that will scale with your business.
-
-Inspired by Midday and the Next.js SaaS Starter template. Thanks to these projects and communities for ideas and best practices.
 
 ## What's included
 
 ### Core Technologies
-[Next.js](https://nextjs.org/) - Framework<br>
+[Vite](https://vite.dev/) - Build tool<br>
+[React Router v7](https://reactrouter.com/) - SPA routing (SPA mode)<br>
 [Turborepo](https://turbo.build) - Build system<br>
 [Bun](https://bun.sh/) - Package manager & runtime<br>
 [TypeScript](https://www.typescriptlang.org/) - Type safety<br>
@@ -26,228 +17,154 @@ Inspired by Midday and the Next.js SaaS Starter template. Thanks to these projec
 [Shadcn](https://ui.shadcn.com/) - UI components<br>
 
 ### Backend & Infrastructure
-[Cloudflare Workers](https://workers.cloudflare.com/) - Edge computing platform<br>
+[Cloudflare Workers](https://workers.cloudflare.com/) - Edge computing (Rust)<br>
 [Cloudflare D1](https://developers.cloudflare.com/d1/) - Edge-native SQLite database<br>
-[Drizzle ORM](https://orm.drizzle.team/) - TypeScript ORM<br>
-[Hono.js](https://hono.dev/) - Lightweight edge API framework<br>
-[Clerk](https://clerk.com/) - Authentication & user management<br>
-[Upstash Redis](https://upstash.com/) - Serverless Redis for rate limiting<br>
-
-### Frontend & Developer Experience
-[react-safe-action](https://next-safe-action.dev) - Type-safe Server Actions<br>
-[nuqs](https://nuqs.47ng.com/) - Type-safe URL state management<br>
-[next-themes](https://next-themes-example.vercel.app/) - Theme manager<br>
-[next-international](https://next-international.vercel.app/) - Internationalization<br>
-[Zod](https://zod.dev/) - Schema validation<br>
+[Supabase Auth](https://supabase.com/auth) - Authentication<br>
+[Stripe](https://stripe.com) - Billing<br>
 
 ### Development Tools
-[Biome](https://biomejs.dev) - Fast linter & formatter (replaces ESLint/Prettier)<br>
+[Biome](https://biomejs.dev) - Linter & formatter<br>
 [Sherif](https://github.com/QuiiBz/sherif) - Monorepo linting<br>
-
-### Services & Integrations
-[React Email](https://react.email/) - Email templates<br>
-[Resend](https://resend.com/) - Email delivery<br>
-[Sentry](https://sentry.io/) - Error monitoring<br>
-[OpenPanel](https://openpanel.dev/) - Privacy-friendly analytics<br>
-[Stripe](https://stripe.com) - Billing<br>
 
 ## Directory Structure
 
 ```
-.
-├── apps                         # Applications
-│    ├── api                     # Edge API (Hono.js + Cloudflare Workers + D1)
-│    ├── app                     # Main SaaS app (Next.js 14 App Router)
-│    ├── web                     # Marketing website (Next.js 14)
-│    └── ...
-├── packages                     # Shared packages
-│    ├── analytics               # OpenPanel analytics wrapper
-│    ├── database               # Database schema & migrations (Drizzle)
-│    ├── email                   # React Email templates
-│    ├── kv                      # Upstash Redis rate limiting
-│    ├── logger                  # Shared logging utilities
-│    └── ui                      # Shared UI components (Shadcn UI)
-├── tooling                      # Shared configurations
-│    └── typescript              # TypeScript configs
-├── .cursorrules                 # Cursor IDE rules
-├── biome.json                   # Biome linter/formatter config
-├── turbo.json                   # Turborepo config
-├── bun.lockb                    # Bun lockfile
-├── LICENSE
-└── README.md
+apps/
+  app/            Vite SPA (React Router v7, Tailwind v3, shadcn)
+  api/            Rust Cloudflare Worker (D1, Stripe)
+packages/
+  supabase/       Supabase client and database types
+  ui/             Shared UI components (shadcn/Radix)
+  logger/         Shared logging (Pino)
+tooling/
+  typescript/     Shared TypeScript configurations
 ```
 
 ## Prerequisites
 
 - [Bun](https://bun.sh/) (v1.1.26 or later)
+- [Rust](https://rustup.rs/) with `wasm32-unknown-unknown` target
 - [Cloudflare account](https://cloudflare.com) (for Workers & D1)
-- [Clerk account](https://clerk.com) (for authentication)
-- [Upstash account](https://upstash.com) (for Redis rate limiting)
-- [Resend account](https://resend.com) (for email delivery)
-- [Sentry account](https://sentry.io) (optional, for error monitoring)
-- [OpenPanel account](https://openpanel.dev) (optional, for analytics)
+- [Supabase account](https://supabase.com) (for authentication)
+- [Stripe account](https://stripe.com) (for billing)
 
 ## Getting Started
 
-Clone this repo locally with the following command:
+1. Install dependencies:
 
 ```bash
-git clone https://github.com/yusa-n/astrolabe.git
-cd astrolabe
-```
-
-1. Install dependencies using bun:
-
-```sh
 bun i
 ```
 
-2. Copy `.env.example` to `.env` and update the variables.
+2. Copy environment files:
 
-```sh
-# Copy .env.example to .env for each app
+```bash
 cp apps/app/.env.example apps/app/.env
 cp apps/api/.dev.vars.example apps/api/.dev.vars
-cp apps/web/.env.example apps/web/.env
 ```
 
 3. Set up services:
 
-   **Clerk (Authentication):**
-   - Create account at [clerk.com](https://clerk.com)
-   - Create a new application
-   - Copy API keys to `.env` files
+   **Supabase (Authentication):**
+   - Create a project at [supabase.com](https://supabase.com)
+   - Copy the project URL and anon key to `apps/app/.env`
+   - Copy the project URL to `apps/api/.dev.vars`
 
    **Cloudflare (API & Database):**
-   - Create account at [cloudflare.com](https://cloudflare.com)
    - Install Wrangler CLI: `bun add -g wrangler`
    - Authenticate: `wrangler login`
    - Create D1 database: `wrangler d1 create astrolabe-db`
-   - Update `wrangler.toml` with your database ID
+   - Update `apps/api/wrangler.toml` with your database ID
 
-   **Upstash (Rate Limiting):**
-   - Create account at [upstash.com](https://upstash.com)
-   - Create a Redis database
-   - Copy credentials to `.env` files
+   **Stripe (Billing):**
+   - Copy secret key and webhook secret to `apps/api/.dev.vars`
 
 4. Set up the database:
 
-```sh
+```bash
 cd apps/api
-bun run db:generate  # Generate migrations
-bun run db:migrate   # Run migrations locally
+wrangler d1 migrations apply APP_DB --local
 ```
 
-5. Start the development server:
+5. Start development:
 
-```sh
-bun dev         # Start everything in development mode
-bun dev:web     # Start marketing site (port 3001)
-bun dev:app     # Start main app (port 3000)
-bun dev:api     # Start API (port 8787)
-bun dev:email   # Start email preview (port 3002)
+```bash
+bun dev          # Start all apps in parallel
+bun dev:app      # SPA frontend only
+bun dev:api      # Rust API only (port 5286)
 ```
+
+### Environment Variables
+
+| App | Variable | Description |
+|-----|----------|-------------|
+| app | `VITE_SUPABASE_URL` | Supabase project URL |
+| app | `VITE_SUPABASE_ANON_KEY` | Supabase anonymous key |
+| app | `VITE_API_URL` | API endpoint (default: `http://localhost:5286`) |
+| api | `SUPABASE_URL` | Supabase project URL |
+| api | `STRIPE_SECRET_KEY` | Stripe secret key |
+| api | `STRIPE_WEBHOOK_SECRET` | Stripe webhook signing secret |
+| api | `APP_BASE_URL` | Frontend URL for Stripe redirects |
 
 ## API Development
 
-The API runs on Cloudflare Workers with Hono.js and uses D1 (SQLite) as the database:
+The API is a Rust Cloudflare Worker with D1 SQLite:
 
-```sh
+```bash
 cd apps/api
 
-# Development
-bun dev              # Start local development server
+# Type check
+cargo check --target wasm32-unknown-unknown
 
-# Database management
-bun db:generate      # Generate Drizzle migrations
-bun db:migrate       # Apply migrations to local D1
-bun db:studio        # Open Drizzle Studio (database GUI)
+# Format
+cargo fmt
 
-# Deployment
-bun deploy           # Deploy to Cloudflare Workers
+# Local database migrations
+wrangler d1 migrations apply APP_DB --local
 
-# Production database
-wrangler d1 migrations apply astrolabe-db --remote
+# Deploy
+wrangler deploy
 
-# Set production secrets
-wrangler secret put CLERK_PUBLISHABLE_KEY
-wrangler secret put CLERK_SECRET_KEY
+# Production database migrations
+wrangler d1 migrations apply APP_DB --remote
 ```
 
-### API Architecture
+### API Routes
 
-- **Edge Runtime**: Runs globally on Cloudflare's edge network
-- **Database**: D1 provides edge-native SQLite with automatic replication
-- **ORM**: Drizzle ORM for type-safe database queries
-- **Authentication**: Clerk middleware validates JWTs on every request
-- **Rate Limiting**: Upstash Redis with fixed window strategy
-
-## Key Features
-
-### Edge-First Architecture
-- API runs on Cloudflare Workers for minimal latency
-- D1 database provides globally distributed SQLite
-- Optimized for performance with Hono.js
-
-### Modern Development Experience
-- Type-safe from database to frontend with Drizzle + Zod
-- Server Actions with automatic validation
-- URL state management with nuqs
-- Biome for fast linting and formatting
-
-### Production Ready
-- Authentication with Clerk (SSO, MFA, etc.)
-- Rate limiting with Upstash Redis
-- Error monitoring with Sentry
-- Internationalization support
-- Email templates with React Email
+| Method | Path | Auth | Description |
+|--------|------|------|-------------|
+| GET | `/api/health` | No | Health check |
+| GET | `/api/session` | Yes | Current user session |
+| GET | `/api/stripe/products` | No | List Stripe products |
+| GET | `/api/stripe/prices` | No | List Stripe prices |
+| POST | `/api/stripe/checkout/sessions` | Yes | Create checkout session |
+| POST | `/api/stripe/portal/sessions` | Yes | Create billing portal session |
+| POST | `/api/webhooks/stripe` | No | Stripe webhook receiver |
 
 ## Common Commands
 
-```sh
-# Development
+```bash
 bun dev          # Start all apps
-bun dev:app      # Start main app only
-bun dev:api      # Start API only
-bun dev:web      # Start marketing site only
-
-# Code quality
-bun lint         # Lint with Biome
-bun format       # Format with Biome
-bun typecheck    # TypeScript checking
-
-# Build
 bun build        # Build all apps
+bun typecheck    # TypeScript checking
+bun lint         # Lint with Biome + Sherif
+bun format       # Format with Biome
 bun clean        # Clean build artifacts
 ```
 
 ## Deployment
 
-### Deploy Next.js Apps to Vercel
+### SPA (Cloudflare Pages / any static host)
 
-The web and app can be deployed to Vercel:
-
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fyusa-n%2Fastrolabe)
-
-### Deploy API to Cloudflare
-
-```sh
-cd apps/api
-bun deploy
-
-# Don't forget to set production secrets
-wrangler secret put CLERK_PUBLISHABLE_KEY
-wrangler secret put CLERK_SECRET_KEY
-
-# Run production migrations
-wrangler d1 migrations apply astrolabe-db --remote
+```bash
+bun run --filter @astrolabe/app build
+# Deploy build/client/ to your static host
 ```
 
-## Learn More
+### API (Cloudflare Workers)
 
-- [Cloudflare Workers Documentation](https://developers.cloudflare.com/workers/)
-- [D1 Database Documentation](https://developers.cloudflare.com/d1/)
-- [Drizzle ORM Documentation](https://orm.drizzle.team/)
-- [Hono.js Documentation](https://hono.dev/)
-- [Clerk Documentation](https://clerk.com/docs)
-- [Next.js Documentation](https://nextjs.org/docs)
+```bash
+cd apps/api
+wrangler deploy
+wrangler d1 migrations apply APP_DB --remote
+```

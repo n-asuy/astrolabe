@@ -53,9 +53,10 @@ bun clean:workspaces     # Clean workspace artifacts
 
 ### Authentication
 - **Supabase Auth** handles user authentication
-- SPA uses `@supabase/supabase-js` browser client
-- API verifies Supabase JWT tokens via JWKS endpoint
-- Auth context provided via React Context (`app/lib/auth.tsx`)
+- SPA uses `@supabase/supabase-js` browser client via lazy-initialized singleton (`app/lib/supabase.ts`)
+- API verifies Supabase tokens by calling `/auth/v1/user` endpoint (`src/auth.rs`)
+- Auth context provided via React Context (`app/lib/auth.tsx`) with error state for missing configuration
+- Error boundary in `app/root.tsx` catches uncaught errors and displays them
 
 ### API Communication
 - SPA calls Rust API at `VITE_API_URL` (default: `http://localhost:5286`)
