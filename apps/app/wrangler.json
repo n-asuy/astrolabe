@@ -1,0 +1,16 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "astrolabe-app",
+  "main": "./workers/app.ts",
+  "compatibility_date": "2025-10-08",
+  "compatibility_flags": ["nodejs_compat"],
+  "observability": {
+    "enabled": true
+  },
+  "upload_source_maps": true,
+  "vars": {
+    "VITE_SUPABASE_URL": "",
+    "VITE_SUPABASE_ANON_KEY": "",
+    "VITE_API_URL": ""
+  }
+}

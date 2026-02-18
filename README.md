@@ -2,15 +2,30 @@
 	<img src="image.jpg" alt="Astrolabe" />
 	<h1 align="center"><b>Astrolabe</b></h1>
 	<p align="center">
-    SaaS starter kit built as a Turborepo monorepo.
+    SaaS starter kit built as a Turborepo monorepo. Runs entirely on Cloudflare.
   </p>
 </p>
+
+<p align="center">
+  <a href="#deploy-to-cloudflare"><strong>One-Click Deploy</strong></a> ·
+  <a href="#whats-included"><strong>What's included</strong></a> ·
+  <a href="#getting-started"><strong>Getting Started</strong></a>
+</p>
+
+## Deploy to Cloudflare
+
+Deploy each app to Cloudflare Workers with one click:
+
+| App | Deploy |
+|-----|--------|
+| Frontend (React Router) | [![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/yusa-n/astrolabe/tree/main/apps/app) |
+| API (Rust) | [![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/yusa-n/astrolabe/tree/main/apps/api) |
 
 ## What's included
 
 ### Core Technologies
-[Vite](https://vite.dev/) - Build tool<br>
-[React Router v7](https://reactrouter.com/) - SPA routing (SPA mode)<br>
+[Vite](https://vite.dev/) + [@cloudflare/vite-plugin](https://developers.cloudflare.com/workers/vite-plugin/) - Build & deploy<br>
+[React Router v7](https://reactrouter.com/) - Full-stack routing (SSR on Cloudflare Workers)<br>
 [Turborepo](https://turbo.build) - Build system<br>
 [Bun](https://bun.sh/) - Package manager & runtime<br>
 [TypeScript](https://www.typescriptlang.org/) - Type safety<br>
@@ -31,7 +46,7 @@
 
 ```
 apps/
-  app/            Vite SPA (React Router v7, Tailwind v3, shadcn)
+  app/            React Router v7 on Cloudflare Workers (Vite, Tailwind v3, shadcn)
   api/            Rust Cloudflare Worker (D1, Stripe)
 packages/
   supabase/       Supabase client and database types
@@ -91,7 +106,7 @@ wrangler d1 migrations apply APP_DB --local
 
 ```bash
 bun dev          # Start all apps in parallel
-bun dev:app      # SPA frontend only
+bun dev:app      # Frontend only
 bun dev:api      # Rust API only (port 5286)
 ```
 
@@ -155,11 +170,11 @@ bun clean        # Clean build artifacts
 
 ## Deployment
 
-### SPA (Cloudflare Pages / any static host)
+### Frontend (Cloudflare Workers)
 
 ```bash
-bun run --filter @astrolabe/app build
-# Deploy build/client/ to your static host
+cd apps/app
+bun run deploy   # react-router build && wrangler deploy
 ```
 
 ### API (Cloudflare Workers)

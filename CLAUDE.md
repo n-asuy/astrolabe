@@ -4,7 +4,9 @@ This file provides guidance to Claude Code when working with code in this reposi
 
 ## Project Overview
 
-A SaaS starter kit built as a Turborepo monorepo with a Vite + React Router v7 SPA frontend and a Rust Cloudflare Workers API backend.
+A SaaS starter kit built as a Turborepo monorepo. Both frontend and API run on Cloudflare Workers.
+- **apps/app**: React Router v7 SSR on Cloudflare Workers via `@cloudflare/vite-plugin`
+- **apps/api**: Rust Cloudflare Worker
 
 ## Common Development Commands
 
@@ -12,7 +14,7 @@ A SaaS starter kit built as a Turborepo monorepo with a Vite + React Router v7 S
 ```bash
 bun i                    # Install dependencies
 bun dev                  # Start all apps in parallel
-bun dev:app              # SPA frontend (Vite dev server)
+bun dev:app              # Frontend on Workers (Vite + @cloudflare/vite-plugin)
 bun dev:api              # Rust API on Cloudflare Workers (port 5286)
 ```
 
@@ -44,7 +46,7 @@ bun clean:workspaces     # Clean workspace artifacts
 ## Architecture
 
 ### Monorepo Structure
-- **apps/app**: SPA frontend (Vite + React Router v7, SPA mode, Tailwind v3 + shadcn)
+- **apps/app**: Frontend (Vite + React Router v7 SSR on Cloudflare Workers, Tailwind v3 + shadcn)
 - **apps/api**: REST API (Rust Cloudflare Worker, D1 SQLite, Stripe)
 - **packages/supabase**: Supabase client and database types
 - **packages/ui**: Shared UI components (shadcn/Radix, Tailwind)
@@ -53,13 +55,13 @@ bun clean:workspaces     # Clean workspace artifacts
 
 ### Authentication
 - **Supabase Auth** handles user authentication
-- SPA uses `@supabase/supabase-js` browser client via lazy-initialized singleton (`app/lib/supabase.ts`)
+- Frontend uses `@supabase/supabase-js` browser client via lazy-initialized singleton (`app/lib/supabase.ts`)
 - API verifies Supabase tokens by calling `/auth/v1/user` endpoint (`src/auth.rs`)
 - Auth context provided via React Context (`app/lib/auth.tsx`) with error state for missing configuration
 - Error boundary in `app/root.tsx` catches uncaught errors and displays them
 
 ### API Communication
-- SPA calls Rust API at `VITE_API_URL` (default: `http://localhost:5286`)
+- Frontend calls Rust API at `VITE_API_URL` (default: `http://localhost:5286`)
 - Auth: Bearer token from Supabase session passed in Authorization header
 - API routes: `/api/health`, `/api/session`, `/api/stripe/*`, `/api/webhooks/stripe`
 

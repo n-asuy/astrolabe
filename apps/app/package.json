@@ -7,6 +7,9 @@
     "dev": "react-router dev",
     "build": "react-router build",
     "clean": "rm -rf .react-router build node_modules",
+    "preview": "react-router build && vite preview",
+    "deploy": "react-router build && wrangler deploy",
+    "cf-typegen": "wrangler types && react-router typegen",
     "typecheck": "tsc --noEmit",
     "lint": "biome check ."
   },
@@ -21,6 +24,7 @@
     "react-router": "^7.13.0"
   },
   "devDependencies": {
+    "@cloudflare/vite-plugin": "^1.25.1",
     "@react-router/dev": "^7.13.0",
     "@types/react": "^19.2.13",
     "@types/react-dom": "^19.2.3",
@@ -29,6 +33,7 @@
     "tailwindcss": "^3.4.10",
     "tailwindcss-animate": "^1.0.7",
     "typescript": "^5.9.3",
-    "vite": "^7.3.1"
+    "vite": "^7.3.1",
+    "wrangler": "^4.66.0"
   }
 }
