@@ -1,5 +1,3 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
 # dependencies
 node_modules
 .pnp
@@ -8,17 +6,9 @@ node_modules
 # testing
 coverage
 
-# next.js
-.next/
-out/
-next-env.d.ts
-
-# expo
-.expo/
-dist/
-
 # production
 build
+dist
 
 # misc
 .DS_Store
@@ -43,19 +33,12 @@ yarn-error.log*
 # turbo
 .turbo
 
-# react-email
-.react-email
-packages/email/public
-!packages/email/public/.gitkeep
-!packages/email/.react-email/.gitkeep
-
-# Storybook
-storybook-static
-tailwind.css
-
 # Cloudflare
 .dev.vars
 .wrangler
 
-# Trigger
-.trigger
+# React Router
+.react-router/
+
+# Rust
+target/

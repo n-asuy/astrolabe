@@ -1,0 +1,19 @@
+{
+  "name": "@astrolabe/supabase",
+  "version": "0.1.0",
+  "private": true,
+  "sideEffects": false,
+  "scripts": {
+    "clean": "rm -rf .turbo node_modules",
+    "lint": "biome check .",
+    "format": "biome format --write .",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.47.12"
+  },
+  "exports": {
+    "./client": "./src/clients/client.ts",
+    "./types": "./src/types/db.ts"
+  }
+}

@@ -1,122 +1,78 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This file provides guidance to Claude Code when working with code in this repository.
 
 ## Project Overview
 
-This is a production-ready SaaS starter kit based on Midday, built as a Turborepo monorepo with Next.js 14, TypeScript, and modern tooling.
+A SaaS starter kit built as a Turborepo monorepo with a Vite + React Router v7 SPA frontend and a Rust Cloudflare Workers API backend.
 
 ## Common Development Commands
 
 ### Development
 ```bash
-# Install dependencies (using Bun)
-bun i
-
-# Start all apps in development mode
-bun dev
-
-# Start specific apps
-bun dev:web    # Marketing site (port 3001)
-bun dev:app    # Main app (port 3000)
-
-# Deploy API to Cloudflare Workers
-cd apps/api && bun run deploy
+bun i                    # Install dependencies
+bun dev                  # Start all apps in parallel
+bun dev:app              # SPA frontend (Vite dev server)
+bun dev:api              # Rust API on Cloudflare Workers (port 5286)
 ```
 
 ### Code Quality
 ```bash
-# Lint entire codebase
-bun lint
+bun lint                 # Lint entire codebase
+bun format               # Format code with Biome
+bun typecheck            # Type checking
+bun lint:repo:fix        # Fix Sherif monorepo linting issues
+```
 
-# Format code with Biome
-bun format
-
-# Type checking
-bun typecheck
-
-# Fix linting issues with Sherif
-bun lint:repo:fix
+### API (Rust)
+```bash
+cd apps/api
+cargo fmt                # Format Rust code
+cargo check --target wasm32-unknown-unknown  # Type check
+wrangler deploy          # Deploy to Cloudflare Workers
+wrangler d1 migrations apply APP_DB --local   # Apply D1 migrations locally
+wrangler d1 migrations apply APP_DB --remote  # Apply D1 migrations to production
 ```
 
 ### Build & Clean
 ```bash
-# Build all apps
-bun build
-
-# Clean all build artifacts
-bun clean
-
-# Clean workspaces
-bun clean:workspaces
+bun build                # Build all apps
+bun clean                # Clean all build artifacts
+bun clean:workspaces     # Clean workspace artifacts
 ```
 
 ## Architecture
 
 ### Monorepo Structure
-- **apps/api**: Hono.js API running on Cloudflare Workers with Clerk authentication
-- **apps/app**: Main SaaS application (Next.js 14 App Router, Clerk auth, i18n)
-- **apps/web**: Marketing website (Next.js 14 App Router)
-- **packages/ui**: Shared UI components based on Shadcn UI
-- **packages/analytics**: OpenPanel analytics wrapper
-- **packages/email**: React Email templates
-- **packages/kv**: Upstash Redis rate limiting utilities
-- **packages/logger**: Shared logging utilities
+- **apps/app**: SPA frontend (Vite + React Router v7, SPA mode, Tailwind v3 + shadcn)
+- **apps/api**: REST API (Rust Cloudflare Worker, D1 SQLite, Stripe)
+- **packages/supabase**: Supabase client and database types
+- **packages/ui**: Shared UI components (shadcn/Radix, Tailwind)
+- **packages/logger**: Shared logging (Pino)
 - **tooling/typescript**: Shared TypeScript configurations
 
-### Key Patterns
+### Authentication
+- **Supabase Auth** handles user authentication
+- SPA uses `@supabase/supabase-js` browser client
+- API verifies Supabase JWT tokens via JWKS endpoint
+- Auth context provided via React Context (`app/lib/auth.tsx`)
 
-#### Server Actions with Validation
-```typescript
-// Use react-safe-action with Zod schemas
-export const myAction = authActionClient
-  .schema(mySchema)
-  .action(async ({ parsedInput, ctx }) => {
-    // Handle business logic
-  });
-```
+### API Communication
+- SPA calls Rust API at `VITE_API_URL` (default: `http://localhost:5286`)
+- Auth: Bearer token from Supabase session passed in Authorization header
+- API routes: `/api/health`, `/api/session`, `/api/stripe/*`, `/api/webhooks/stripe`
 
-#### Internationalization
-The app uses next-international with locales defined in `src/locales/`:
-- Dynamic routing: `app/[locale]/(dashboard)`
-- Server/client locale utilities in `locales/server.ts` and `locales/client.ts`
-
-#### Authentication Flow
-- Clerk handles auth for the main app
-- API uses Clerk backend SDK with Hono middleware
-- Middleware in `apps/app/src/middleware.ts` protects routes
-
-#### Rate Limiting
-Upstash Redis integration for API rate limiting:
-```typescript
-import { ratelimit } from "@v2/kv/ratelimit";
-// Check rate limits before processing
-```
-
-### UI Development Guidelines
-- Use Shadcn UI components from `@v2/ui`
-- Follow mobile-first responsive design with Tailwind CSS
-- Minimize client components - prefer RSC
-- Wrap client components in Suspense boundaries
-- Use `nuqs` for URL state management
+### Stripe Integration
+- Checkout sessions, billing portal, products/prices listing via API
+- Webhook verification with HMAC-SHA256
+- Subscription management stored in D1 database
 
 ### Environment Variables
-Each app has its own `.env` file. Key services:
-- **Clerk**: Authentication
-- **Upstash**: Redis for rate limiting
-- **Resend**: Email delivery
-- **Sentry**: Error monitoring
-- **OpenPanel**: Analytics
+- **apps/app**: `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`, `VITE_API_URL`
+- **apps/api**: `SUPABASE_URL`, `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `APP_BASE_URL`
 
-### TypeScript Configuration
-- Shared configs in `tooling/typescript/`
-- Each package extends the appropriate base config
-- Strict mode enabled with functional programming patterns
-
-## Code Style (from .cursorrules)
-- Functional TypeScript with interfaces over types
-- No classes, prefer functional components
-- Descriptive names with auxiliary verbs (isLoading, hasError)
-- Early returns and guard clauses
-- Zod for validation
-- Model errors as return values in Server Actions
+## Code Style
+- Functional TypeScript, no classes
+- Biome for linting/formatting
+- shadcn UI components from `@astrolabe/ui`
+- Tailwind CSS v3 with CSS variable theming

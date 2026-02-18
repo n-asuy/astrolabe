@@ -1,23 +1,17 @@
 name = "astrolabe-api"
-main = "src/index.ts"
-compatibility_date = "2024-01-01"
+main = "build/worker/shim.mjs"
+compatibility_date = "2025-03-10"
+compatibility_flags = ["nodejs_compat"]
+workers_dev = true
 
-[env.production]
-vars = { ENVIRONMENT = "production" }
+[build]
+command = "cargo install -q worker-build && worker-build --release"
 
-[env.development]
-vars = { ENVIRONMENT = "development" }
+[observability]
+enabled = true
 
-# D1 Database binding
 [[d1_databases]]
-binding = "DB"
+binding = "APP_DB"
 database_name = "astrolabe-db"
-database_id = "YOUR_DATABASE_ID" # Replace with actual ID after creating the database
-
-# Clerk environment variables should be set in Cloudflare dashboard or via wrangler secret
-# wrangler secret put CLERK_PUBLISHABLE_KEY
-# wrangler secret put CLERK_SECRET_KEY
-
-# Stripe environment variables (set as secrets)
-# wrangler secret put STRIPE_SECRET_KEY
-# wrangler secret put STRIPE_WEBHOOK_SECRET
+database_id = "REPLACE_WITH_YOUR_D1_DATABASE_ID"
+migrations_dir = "migrations"

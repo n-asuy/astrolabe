@@ -4,7 +4,7 @@
     "enabled": true
   },
   "linter": {
-    "ignore": ["node_modules", ".next", "packages/tsconfig"],
+    "ignore": ["node_modules", ".react-router", "build", "packages/tsconfig"],
     "enabled": true,
     "rules": {
       "recommended": true,

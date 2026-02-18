@@ -1,30 +1,18 @@
 {
   "name": "@astrolabe/api",
+  "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "wrangler dev src/index.ts --port 5286",
+    "dev": "wrangler dev --port 5286",
+    "build": "cargo build --target wasm32-unknown-unknown --release",
+    "typecheck": "cargo check --target wasm32-unknown-unknown",
+    "check": "cargo fmt -- --check",
+    "fmt": "cargo fmt",
     "deploy": "wrangler deploy",
-    "typecheck": "tsc --noEmit",
-    "db:generate": "drizzle-kit generate",
-    "db:migrate": "wrangler d1 migrations apply astrolabe-db --local",
-    "db:migrate:remote": "wrangler d1 migrations apply astrolabe-db --remote",
-    "db:reset": "rm -f .wrangler/state/v3/d1/miniflare-D1DatabaseObject/*.sqlite* && bun run db:migrate",
-    "test": "bun test",
-    "stripe:seed": "bun run scripts/stripe-seed.ts"
-  },
-  "dependencies": {
-    "@clerk/backend": "^1.2.4",
-    "@cloudflare/d1": "^1.4.1",
-    "@hono/clerk-auth": "^2.0.0",
-    "drizzle-orm": "^0.44.4",
-    "hono": "^4.4.7"
+    "migrate:local": "wrangler d1 migrations apply APP_DB --local",
+    "migrate:remote": "wrangler d1 migrations apply APP_DB --remote"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^4.20240605.0",
-    "@types/node": "^22",
-    "drizzle-kit": "^0.31.4",
-    "bun-types": "^1.0.0",
-    "typescript": "^5.5.4",
     "wrangler": "^3.60.1"
   }
 }
