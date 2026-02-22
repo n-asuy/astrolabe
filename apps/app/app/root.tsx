@@ -48,9 +48,7 @@ export function ErrorBoundary() {
   return (
     <div className="flex h-screen w-screen items-center justify-center bg-destructive/5 p-4">
       <div className="max-w-md rounded-lg border border-destructive/20 bg-card p-6 shadow-sm">
-        <h1 className="mb-2 text-lg font-semibold text-destructive">
-          {title}
-        </h1>
+        <h1 className="mb-2 text-lg font-semibold text-destructive">{title}</h1>
         <p className="text-sm text-muted-foreground">{message}</p>
       </div>
     </div>

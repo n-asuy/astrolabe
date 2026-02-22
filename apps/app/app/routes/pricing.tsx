@@ -26,8 +26,10 @@ export default function PricingPage() {
   useEffect(() => {
     const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5286";
     Promise.all([
-      fetch(`${apiUrl}/api/stripe/products`).then((r) => r.ok ? r.json() : []),
-      fetch(`${apiUrl}/api/stripe/prices`).then((r) => r.ok ? r.json() : []),
+      fetch(`${apiUrl}/api/stripe/products`).then((r) =>
+        r.ok ? r.json() : [],
+      ),
+      fetch(`${apiUrl}/api/stripe/prices`).then((r) => (r.ok ? r.json() : [])),
     ]).then(([prods, prs]) => {
       setProducts(prods);
       setPrices(prs);

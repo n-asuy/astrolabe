@@ -28,7 +28,10 @@ export default function SignUpPage() {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 rounded-lg border bg-card p-6 shadow-sm">
+    <form
+      onSubmit={handleSubmit}
+      className="space-y-4 rounded-lg border bg-card p-6 shadow-sm"
+    >
       <h1 className="text-2xl font-bold">Sign Up</h1>
       {error && <p className="text-sm text-destructive">{error}</p>}
       <Input

@@ -1,4 +1,4 @@
-import { type RouteConfig, route, layout } from "@react-router/dev/routes";
+import { type RouteConfig, layout, route } from "@react-router/dev/routes";
 
 export default [
   layout("layouts/auth.tsx", [
