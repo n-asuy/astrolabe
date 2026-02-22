@@ -13,6 +13,6 @@
     "migrate:remote": "wrangler d1 migrations apply APP_DB --remote"
   },
   "devDependencies": {
-    "wrangler": "^3.60.1"
+    "wrangler": "^4.66.0"
   }
 }
