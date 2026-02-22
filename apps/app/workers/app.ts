@@ -10,7 +10,7 @@ declare module "react-router" {
 }
 
 const requestHandler = createRequestHandler(
-  () => import("virtual:react-router/server-build"),
+  () => import("virtual:react-router/server-build").then((mod) => mod.default),
   import.meta.env.MODE,
 );
 

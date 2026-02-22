@@ -27,9 +27,11 @@ export default function PricingPage() {
     const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5286";
     Promise.all([
       fetch(`${apiUrl}/api/stripe/products`).then((r) =>
-        r.ok ? r.json() : [],
+        r.ok ? (r.json() as Promise<Product[]>) : [],
       ),
-      fetch(`${apiUrl}/api/stripe/prices`).then((r) => (r.ok ? r.json() : [])),
+      fetch(`${apiUrl}/api/stripe/prices`).then((r) =>
+        r.ok ? (r.json() as Promise<Price[]>) : [],
+      ),
     ]).then(([prods, prs]) => {
       setProducts(prods);
       setPrices(prs);
@@ -115,7 +117,7 @@ function PricingCard({
     });
 
     if (res.ok) {
-      const { url } = await res.json();
+      const { url } = (await res.json()) as { url?: string };
       if (url) window.location.href = url;
     }
     setSubmitting(false);
